@@ -5,7 +5,11 @@
     --background-color: #f8f9fa;
     --cart-background: #ffffff;
     --highlight-background: #fff8e1;
-}
+    --bp-sm: 576px;
+    --bp-md: 768px;
+    --bp-lg: 992px;
+    --bp-xl: 1200px;
+} 
 
 .container {
     width: 90%;
@@ -257,10 +261,36 @@ ul {
 }
 .cart-container{
     padding-top: 150px; /* Khắc phục lỗi Navbar cố định che khuất nội dung */
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    display: list-item;
-    gap: 25px;
+    display: grid;
+    grid-template-columns: 1fr; /* mobile-first, stacks */
+    gap: 20px;
+} 
+
+/* Responsive grid layout: stack on mobile, 2fr/1fr on larger screens */
+@media (min-width: var(--bp-md)){
+    .cart-container{
+        grid-template-columns: 2fr 1fr;
+        align-items: start;
+    }
+    .cart-items-list{ grid-column: 1; }
+    .cart-summary{ grid-column: 2; }
+    .item-quantity{ width: 120px; }
+}
+
+/* Ensure the cart stacks on smaller screens even if old duplicated rules exist */
+@media (max-width: var(--bp-md)){
+    .cart-container{ grid-template-columns: 1fr !important; }
+}
+
+/* Consolidated item quantity default for mobile-first behavior */
+.item-quantity{
+    flex: none;
+    min-width: 70px;
+    width: auto; 
+    text-align: center;
 }
 .cart-items-list{
     flex: 2;
@@ -508,7 +538,7 @@ h2{
 }
 @media (max-width: 768px){
     .cart-container{
-        flex-direction: column;
+        grid-template-columns: 1fr;
         gap: 15px;
     }
     .cart-items-list, .cart-summary{
@@ -524,7 +554,7 @@ h2{
     .item-quantity, .item-total{
         flex: 1;
         text-align: left;
-        padding-left: 95px;
+        padding-left: 12px;
     }
     .item-total{
         text-align: right;
@@ -538,13 +568,9 @@ h2{
     }
 }
 
-.cart-container {
-    padding: inherit;
-    display: grid;
-    width: 900px;
-    margin: 0 auto;
-    row-gap: 5px;
-}
+/* duplicate .cart-container removed - consolidated above */
+
+
 
 .cart-item {
     display: flex;
@@ -556,11 +582,12 @@ h2{
 }
 
 .cart-item img {
-    width: 100px;
-    height: 100px;
+    width: clamp(60px, 8vw, 100px);
+    height: clamp(60px, 8vw, 100px);
     object-fit: cover;
     margin-right: 15px;
-}
+    flex-shrink: 0;
+} 
 
 .cart-item h3 {
     margin: 0 0 5px 0;
@@ -807,7 +834,7 @@ h2{
 }
 @media (max-width: 768px){
     .cart-container{
-        flex-direction: column;
+        grid-template-columns: 1fr;
         gap: 15px;
     }
     .cart-items-list, .cart-summary{
@@ -823,7 +850,7 @@ h2{
     .item-quantity, .item-total{
         flex: 1;
         text-align: left;
-        padding-left: 95px;
+        padding-left: 12px;
     }
     .item-total{
         text-align: right;
@@ -853,3 +880,37 @@ h2{
     -webkit-line-clamp: 1;   
     -webkit-box-orient: vertical; 
 }
+
+/* ----------------------------- */
+/* Responsive overrides to ensure consistent behavior across devices */
+/* These rules are added last so they override duplicates above */
+.cart-container{
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.cart-items-list, .cart-summary{ padding: 20px; }
+.cart-item img{ width: clamp(60px, 8vw, 100px); height: clamp(60px, 8vw, 100px); object-fit: cover; }
+.item-image{ width: clamp(60px, 8vw, 100px); height: clamp(60px, 8vw, 100px); }
+.item-info{ max-width: none; }
+.item-quantity{ min-width: 70px; width: auto; }
+@media (min-width: var(--bp-md)){
+    .item-quantity{ width: 120px; }
+    .cart-container{ grid-template-columns: 2fr 1fr; }
+    .cart-items-list{ grid-column: 1; }
+    .cart-summary{ grid-column: 2; }
+}
+
+/* Small-screen improvements */
+@media (max-width: 480px){
+    .cart-items-list, .cart-summary{ padding: 12px; }
+    .item-info a{ font-size: 1rem; }
+    .summary-promo{ flex-direction: column; gap: 8px; }
+    .summary-promo input{ width: 100%; margin-right: 0; }
+    .summary-promo button{ width: 100%; }
+    .item-quantity{ min-width: 60px; }
+}
+
+/* Scale important text for accessibility across screens */
+.item-total p{ font-size: clamp(1em, 1.8vw, 1.1em); }
+.unit-price{ font-size: clamp(0.85em, 1.2vw, 0.95em); }
