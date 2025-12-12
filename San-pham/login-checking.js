@@ -30,6 +30,6 @@ auth.onAuthStateChanged(user => {
     } else {
         // Chưa đăng nhập
         link.innerHTML = `<i class="fas fa-user me-1"></i> Đăng nhập`;
-        link.href = "/login-main/index_login.html";
+        link.href = "login-main/index_login.html";
     }
 });
